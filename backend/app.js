@@ -11,6 +11,8 @@ const csrfRouter = require('./routes/api/csrf');
 
 const csurf = require('csurf');
 
+const debug = require('debug');
+
 const app = express();
 
 app.use(logger('dev'));
@@ -34,5 +36,24 @@ if (!isProduction) {
 app.use('/api/users', usersRouter);
 app.use('/api/tweets', tweetsRouter);
 app.use('/api/csrf', csrfRouter); 
+
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.statusCode = 404;
+  next(err);
+})
+
+const serverErrorLogger = debug('backend:error');
+
+app.use((err, req, res, next) => {
+  serverErrorLogger(err);
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode);
+  res.json({
+    message: err.message,
+    statusCode,
+    errors: err.errors
+  })
+});
 
 module.exports = app;

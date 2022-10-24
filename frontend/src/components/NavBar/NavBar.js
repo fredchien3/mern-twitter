@@ -6,7 +6,7 @@ export default function NavBar() {
   const loggedIn = useSelector(state => !!state.session.user);
   const dispatch = useDispatch();
 
-  const logoutUser = () => {
+  const handleClick = () => {
     dispatch(logout());
   }
 
@@ -15,7 +15,7 @@ export default function NavBar() {
       <Link to="/tweets">All Tweets</Link>
       <Link to="/profile">Profile</Link>
       <Link to="/tweets/new">Write a Tweet</Link>
-      <Button onClick={logoutUser}>Logout</Button>
+      <button onClick={handleClick}>Logout</button>
     </div>
   ) : (
     <div className="navbar-links">
